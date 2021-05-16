@@ -4,12 +4,23 @@ namespace Core
 {
     public class Optional<T>
     {
+        public class EmptyOptionalException : Exception { }
+
         T val_ = default(T);
         bool hasValue = false;
 
         public bool HasValue
         {
             get { return hasValue; }
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (hasValue) { return val_; }
+                throw new EmptyOptionalException();
+            }
         }
 
         public Optional() { }

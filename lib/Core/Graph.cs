@@ -68,6 +68,21 @@ namespace Core
             AddDoubleEdge(int source, int target, int weight = 1)
             => AddDoubleEdge(new Edge { Start = source, Stop = target, Weight = weight });
 
+        public Optional<Edge> GetEdge(int source, int target)
+        {
+            List<Edge> outEdges;
+            if (edges_.TryGetValue(source, out outEdges))
+            {
+                var outEdge = outEdges.FirstOrDefault(e => e.Stop == target);
+                if (outEdge != null)
+                {
+                    return new Optional<Edge>(outEdge);
+                }
+            }
+
+            return new Optional<Edge>();
+        }
+
         /// <summary>
         /// Add's and edge between two verices, return's if the edge was added. Returns Empty optional if edge already exists. This edge will never modify an existing edge.
         /// </summary>
@@ -129,6 +144,13 @@ namespace Core
             {
                 matrix[target, source] = weight;
             }
+        }
+
+        public Optional<Edge> GetEdge(int source, int target)
+        {
+            if (matrix[source, target] == int.MaxValue)
+            { return new Optional<Edge>(); }
+            return new Optional<Edge>(new Edge { Weight = matrix[source, target], Start = source, Stop = target });
         }
 
         // represent 
