@@ -7,6 +7,9 @@ namespace Core
     public interface ITraversable
     {
         [Pure]
+        Optional<Edge> GetEdge(int source, int target);
+
+        [Pure]
         IEnumerable<Edge> GetAdjacentEdges(int v);
 
         [Pure]
