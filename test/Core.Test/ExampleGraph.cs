@@ -22,6 +22,7 @@ namespace Core.Test
             g.AddEdge(vs[2], vs[3], 9);
             g.AddEdge(vs[2], vs[1], 7);
             g.AddEdge(vs[2], vs[5], 2);
+            g.AddEdge(vs[2], vs[6], 5);
 
             g.AddEdge(vs[3], vs[0], 7);
             g.AddEdge(vs[3], vs[1], 9);
@@ -40,6 +41,7 @@ namespace Core.Test
 
             g.AddEdge(vs[6], vs[2], 5);
             g.AddEdge(vs[6], vs[5], 2);
+            g.AddEdge(vs[6], vs[5], 5);
 
             return g;
         }

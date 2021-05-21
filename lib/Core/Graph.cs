@@ -64,6 +64,41 @@ namespace Core
         public Optional<Edge> AddEdge(Edge e)
             => AddEdge(e.Start, e.Stop, e.Weight);
 
+        public bool UpdateEdge(Edge e)
+        {
+            List<Edge> vals;
+            if (edges_.TryGetValue(e.Start, out vals))
+            {
+                for (int i = 0; i < vals.Count(); ++i)
+                {
+                    if (vals[i].Stop == e.Stop)
+                    {
+                        vals[i] = e;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool RemoveEdge(Edge e)
+        {
+            List<Edge> vals;
+            if (edges_.TryGetValue(e.Start, out vals))
+            {
+                for (int i = 0; i < vals.Count(); ++i)
+                {
+                    if (vals[i].Stop == e.Stop)
+                    {
+                        vals.RemoveAt(i);
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
+
         public (Optional<Edge> forward, Optional<Edge> backward)
             AddDoubleEdge(int source, int target, int weight = 1)
             => AddDoubleEdge(new Edge { Start = source, Stop = target, Weight = weight });
