@@ -26,7 +26,7 @@ namespace Core
             }
         }
 
-        public record DijkstraSolution(int[] Previous, int[] Distances)
+        public record DijkstraSpanningTree(int[] Previous, int[] Distances)
         {
             public ReadOnlyCollection<int> Path(int target)
             {
@@ -47,7 +47,7 @@ namespace Core
                 => Distances[target];
         }
 
-        public static DijkstraSolution DijkStra(ITraversable graph, int source)
+        public static DijkstraSpanningTree DijkStra(ITraversable graph, int source)
         {
             var numberOfVertices = graph.GetVertices().Max() + 1;
 
@@ -84,7 +84,7 @@ namespace Core
                 }
             }
 
-            return new DijkstraSolution(
+            return new DijkstraSpanningTree(
                 Distances: distances,
                 Previous: previous);
         }

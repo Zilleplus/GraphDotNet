@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Core
@@ -12,6 +13,7 @@ namespace Core
         private Dictionary<int, List<Edge>> edges_
             = new Dictionary<int, List<Edge>>();
 
+        [Pure]
         public IEnumerable<int> GetVertices()
             => Enumerable.Range(0, currentVertexCount);
 
@@ -23,6 +25,7 @@ namespace Core
 
         private int currentVertexCount = 0;
 
+        [Pure]
         public IEnumerable<Edge> GetAdjacentEdges(int vertexIndex)
         {
             Debug.Assert(vertexIndex < currentVertexCount);
@@ -65,6 +68,21 @@ namespace Core
             AddDoubleEdge(int source, int target, int weight = 1)
             => AddDoubleEdge(new Edge { Start = source, Stop = target, Weight = weight });
 
+        public Optional<Edge> GetEdge(int source, int target)
+        {
+            List<Edge> outEdges;
+            if (edges_.TryGetValue(source, out outEdges))
+            {
+                var outEdge = outEdges.FirstOrDefault(e => e.Stop == target);
+                if (outEdge != null)
+                {
+                    return new Optional<Edge>(outEdge);
+                }
+            }
+
+            return new Optional<Edge>();
+        }
+
         /// <summary>
         /// Add's and edge between two verices, return's if the edge was added. Returns Empty optional if edge already exists. This edge will never modify an existing edge.
         /// </summary>
@@ -93,5 +111,57 @@ namespace Core
 
             return new Optional<Edge>(newEdge);
         }
+    }
+
+
+    public class GraphMatrix : ITraversable
+    {
+        public bool IsDirected { get; init; } = true;
+
+        public int NumberOfEdges => NumberOfVertices * NumberOfVertices;
+
+        public int NumberOfVertices { get; }
+
+        public GraphMatrix(int NumberOfVertices)
+        {
+            this.NumberOfVertices = NumberOfVertices;
+            matrix = new int[NumberOfVertices, NumberOfVertices];
+            // Edges with value int.MaxValue are not connected.
+            for (int i = 0; i < NumberOfVertices; i++)
+            {
+                for (int j = 0; j < NumberOfVertices; j++)
+                {
+                    matrix[i, j] = int.MaxValue;
+                }
+            }
+        }
+
+        public void SetWeight(int source, int target, int weight)
+        {
+            matrix[source, target] = weight;
+
+            if (!IsDirected)
+            {
+                matrix[target, source] = weight;
+            }
+        }
+
+        public Optional<Edge> GetEdge(int source, int target)
+        {
+            if (matrix[source, target] == int.MaxValue)
+            { return new Optional<Edge>(); }
+            return new Optional<Edge>(new Edge { Weight = matrix[source, target], Start = source, Stop = target });
+        }
+
+        // represent 
+        private int[,] matrix;
+
+        public IEnumerable<Edge> GetAdjacentEdges(int v)
+            => Enumerable
+                .Range(0, NumberOfVertices)
+                .Select(i => new Edge { Start = v, Stop = i, Weight = matrix[v, i] });
+
+        public IEnumerable<int> GetVertices()
+            => Enumerable.Range(0, NumberOfVertices);
     }
 }
