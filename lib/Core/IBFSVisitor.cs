@@ -8,7 +8,8 @@
         void EarlyVisit(int e);
 
         /// <summary>
-        /// Edges of last early visit.
+        /// Edges of last early visit that 
+        /// lead to undiscovered nodes.
         /// </summary>
         void Visit(Edge e);
 

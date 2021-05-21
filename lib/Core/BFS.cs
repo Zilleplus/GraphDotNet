@@ -23,9 +23,9 @@ namespace Core
 
                 foreach (var a in adj)
                 {
-                    visitor.Visit(a);
                     if (!enqueued.Contains(a.Stop))
                     {
+                        visitor.Visit(a);
                         toVisit.Enqueue(a.Stop);
                         enqueued.Add(a.Stop);
                     }
